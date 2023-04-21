@@ -1,1 +1,4 @@
 tenant_export
+terraform/terraform.tfstate
+terraform/.terraform
+terraform/.terraform.lock.hcl
