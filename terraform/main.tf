@@ -61,24 +61,15 @@ module "eks" {
   }
 
   eks_managed_node_groups = {
-    one = {
-      name = "node-group-1"
+    main = {
+      name = "node-group-main"
 
-      instance_types = ["t3.small"]
+      //instance_types = ["t3.small"]
+      instance_types = ["m7g.4xlarge"]
 
-      min_size     = 1
-      max_size     = 3
-      desired_size = 2
-    }
-
-    two = {
-      name = "node-group-2"
-
-      instance_types = ["t3.small"]
-
-      min_size     = 1
-      max_size     = 2
-      desired_size = 1
+      min_size     = 4 
+      max_size     = 10 
+      desired_size = 8 
     }
   }
 }

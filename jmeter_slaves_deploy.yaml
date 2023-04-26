@@ -17,6 +17,11 @@ spec:
       containers:
       - name: jmslave
         image: kubernautslabs/jmeter_slave:latest
+        resources:
+          requests:
+            memory: "4Gi"
+          limits:
+            memory: "4Gi"
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 1099
