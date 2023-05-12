@@ -1,47 +1,17 @@
-# Copyright (c) HashiCorp, Inc.
-# SPDX-License-Identifier: MPL-2.0
-
 provider "aws" {
-  profile = "dev"
-  region = var.region
+  profile = "stable"
+  region = "us-east-1"
 }
 
 data "aws_availability_zones" "available" {}
 
 locals {
-  cluster_name = "jmeter-loadtest-eks"
+  cluster_name = "ctg-loadtest"
 }
 
 resource "random_string" "suffix" {
   length  = 8
   special = false
-}
-
-module "vpc" {
-  source  = "terraform-aws-modules/vpc/aws"
-  version = "3.19.0"
-
-  name = "jmeter-loadtest-vpc"
-
-  cidr = "10.0.0.0/16"
-  azs  = slice(data.aws_availability_zones.available.names, 0, 3)
-
-  private_subnets = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
-  public_subnets  = ["10.0.4.0/24", "10.0.5.0/24", "10.0.6.0/24"]
-
-  enable_nat_gateway   = true
-  single_nat_gateway   = true
-  enable_dns_hostnames = true
-
-  public_subnet_tags = {
-    "kubernetes.io/cluster/${local.cluster_name}" = "shared"
-    "kubernetes.io/role/elb"                      = 1
-  }
-
-  private_subnet_tags = {
-    "kubernetes.io/cluster/${local.cluster_name}" = "shared"
-    "kubernetes.io/role/internal-elb"             = 1
-  }
 }
 
 module "eks" {
@@ -51,8 +21,8 @@ module "eks" {
   cluster_name    = local.cluster_name
   cluster_version = "1.24"
 
-  vpc_id                         = module.vpc.vpc_id
-  subnet_ids                     = module.vpc.private_subnets
+  vpc_id                         = "vpc-41f6cd26"
+  subnet_ids                     = ["subnet-b956e8f0","subnet-ff60a2a4","subnet-888c42a5"]
   cluster_endpoint_public_access = true
 
   eks_managed_node_group_defaults = {
@@ -62,10 +32,9 @@ module "eks" {
 
   eks_managed_node_groups = {
     main = {
-      name = "node-group-main"
+      name = "ctg-loadtest-nodegroup"
 
-      //instance_types = ["t3.small"]
-      instance_types = ["m7g.4xlarge"]
+      instance_types = [  var.node_size ]
 
       min_size     = 4 
       max_size     = 10 

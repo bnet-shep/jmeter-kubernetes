@@ -1,12 +1,9 @@
-# Copyright (c) HashiCorp, Inc.
-# SPDX-License-Identifier: MPL-2.0
-
 terraform {
 
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = "~> 4.47.0"
+      version = "~> 4.48"
     }
 
     random = {
@@ -23,6 +20,12 @@ terraform {
       source  = "hashicorp/cloudinit"
       version = "~> 2.2.0"
     }
+  }
+
+  backend "s3" {
+     bucket = "410935837022-terraform-backend"
+     key    = "ctg/aws_load_test/terraform.tfstate"
+     region = "us-east-1"
   }
 
   required_version = "~> 1.3"
