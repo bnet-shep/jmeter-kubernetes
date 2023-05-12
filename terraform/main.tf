@@ -1,12 +1,12 @@
 provider "aws" {
-  profile = "stable"
+  profile = var.profile 
   region = "us-east-1"
 }
 
 data "aws_availability_zones" "available" {}
 
 locals {
-  cluster_name = "ctg-loadtest"
+  cluster_name = replace("ctg-loadtest-${data.external.user.result.username}",".","-")
 }
 
 resource "random_string" "suffix" {

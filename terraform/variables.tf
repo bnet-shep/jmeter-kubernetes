@@ -9,3 +9,9 @@ variable "node_size" {
   type        = string
   default     = "m3.xlarge"
 }
+
+variable "profile" {
+  description = "AWS CLI profile to use for provisioning"
+  type        = string
+  default     = "stable"
+}
